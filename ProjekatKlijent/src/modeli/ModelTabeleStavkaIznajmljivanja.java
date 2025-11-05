@@ -79,5 +79,9 @@ public class ModelTabeleStavkaIznajmljivanja extends AbstractTableModel {
     public StavkaIznajmljivanja getStavkaAt(int i) {
         return lista.get(i);
     }
+
+    public void obrisiStavku(int selectedRow) {
+        lista.remove(selectedRow);
+    }
     
 }

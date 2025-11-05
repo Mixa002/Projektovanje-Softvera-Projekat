@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import kontroler.Komunikacija;
+import modeli.ModelTabeleAutomobili;
 import modeli.ModelTabeleIznajmljivanja;
 import transfer.Request;
 import transfer.Response;
@@ -67,6 +68,7 @@ public class PretragaIznajmljivanjaForm extends javax.swing.JFrame {
         btnZatvori = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         txtKlijent = new javax.swing.JTextField();
+        btnIzmeniIznajmljivanje = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -106,6 +108,13 @@ public class PretragaIznajmljivanjaForm extends javax.swing.JFrame {
 
         jLabel1.setText("Klijent:");
 
+        btnIzmeniIznajmljivanje.setText("izmeni Iznajmljivanje");
+        btnIzmeniIznajmljivanje.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIzmeniIznajmljivanjeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -114,18 +123,22 @@ public class PretragaIznajmljivanjaForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtKlijent))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnDetalji)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(btnZatvori, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnObrisi, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtKlijent)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(btnDetalji))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(btnZatvori, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnObrisi, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(btnIzmeniIznajmljivanje, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -139,11 +152,13 @@ public class PretragaIznajmljivanjaForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
+                        .addGap(8, 8, 8)
+                        .addComponent(btnIzmeniIznajmljivanje)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnDetalji)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnObrisi)
-                        .addGap(27, 27, 27)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnZatvori)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(23, 23, 23))
@@ -212,6 +227,24 @@ public class PretragaIznajmljivanjaForm extends javax.swing.JFrame {
         dif.setVisible(true);
     }//GEN-LAST:event_btnDetaljiActionPerformed
 
+    private void btnIzmeniIznajmljivanjeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzmeniIznajmljivanjeActionPerformed
+        int selectedRow = tblIznajmljivanja.getSelectedRow();
+        if(selectedRow == -1){
+            JOptionPane.showMessageDialog(this, "Morate da odaberete bar jedno iznajmljivanje!", "Greska!", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        ModelTabeleIznajmljivanja mt = (ModelTabeleIznajmljivanja) tblIznajmljivanja.getModel();
+        Iznajmljivanje iz = mt.getIznajmljivanje(selectedRow);
+        System.out.println("Broj stavki iznajmljivanja je: " + iz.getStavkeIznajmljivanja());
+        IzmeniIznajmljivanjeForm izf = new IzmeniIznajmljivanjeForm(this, true, iz);
+        izf.setVisible(true);
+        
+        if(izf.isIzmenjeno()){
+            tblIznajmljivanja.repaint();
+            mt.fireTableDataChanged();
+        }
+    }//GEN-LAST:event_btnIzmeniIznajmljivanjeActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -249,6 +282,7 @@ public class PretragaIznajmljivanjaForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDetalji;
+    private javax.swing.JButton btnIzmeniIznajmljivanje;
     private javax.swing.JButton btnObrisi;
     private javax.swing.JButton btnZatvori;
     private javax.swing.JLabel jLabel1;
