@@ -108,8 +108,8 @@ public class StavkaIznajmljivanja extends AbstractDomainObject {
 
     @Override
     public String uslov() {
-        return "IznajmljivanjeID = " + iznajmljivanje.getIznajmljivanjeID() +
-           " AND Rb = " + rb;
+        return "IznajmljivanjeID = " + iznajmljivanje.getIznajmljivanjeID() /*+
+           " AND Rb = " + rb*/;
     }
 
     @Override
