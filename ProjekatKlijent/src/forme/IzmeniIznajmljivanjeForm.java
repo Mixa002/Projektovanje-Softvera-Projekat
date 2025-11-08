@@ -6,7 +6,9 @@ package forme;
 
 import domain.Automobil;
 import domain.Iznajmljivanje;
+import domain.Klijent;
 import domain.ParametarDostupnihAutomobila;
+import domain.Radnik;
 import domain.StavkaIznajmljivanja;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
@@ -149,6 +151,11 @@ public class IzmeniIznajmljivanjeForm extends javax.swing.JDialog {
         jLabel6.setText("Opis:");
 
         btnSacuvaj.setText("Sacuvaj izmenu");
+        btnSacuvaj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSacuvajActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Zatvori");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -341,6 +348,43 @@ public class IzmeniIznajmljivanjeForm extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnSacuvajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSacuvajActionPerformed
+        try {
+            String opis = txtOpis.getText();
+            double ukupanIznos = 0;
+
+            ModelTabeleStavkaIznajmljivanja mt = (ModelTabeleStavkaIznajmljivanja) tblStavkaIznajmljivanja.getModel();
+            ArrayList<StavkaIznajmljivanja> lista = mt.getLista();
+
+            for (StavkaIznajmljivanja stavkaIznajmljivanja : lista) {
+                ukupanIznos += stavkaIznajmljivanja.getCena();
+            }
+
+            iz.setDatumVreme(new Date());
+            iz.setOpis(opis);
+            iz.setUkupanIznos(ukupanIznos);
+            iz.setStavkeIznajmljivanja(lista);
+            //  Dodaj direktno stavke prilikom pravljenja objekta
+//            Iznajmljivanje iz = new Iznajmljivanje(-1, new Date(), opis, ukupanIznos, k, r, lista);
+
+            Request zahtev = new Request();
+            zahtev.setData(iz);
+            zahtev.setOperation(Operacije.UPDATE_IZNAJMLJIVANJE);
+
+            Komunikacija.getInstance().posaljiZahtev(zahtev);
+            Response odgovor = Komunikacija.getInstance().primiOdgovor();
+
+            boolean uspesno = (boolean) odgovor.getResult();
+            if (uspesno) {
+                JOptionPane.showMessageDialog(this, "Uspešno izmenjeno iznajmljivanje!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Greška prilikom izmene iznajmljivanja!");
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Doslo je do neke greske prilikom izmenjivanja random");
+        }
+    }//GEN-LAST:event_btnSacuvajActionPerformed
 
     public boolean isIzmenjeno() {
         return izmenjeno;
