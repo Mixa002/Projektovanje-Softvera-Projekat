@@ -60,7 +60,7 @@ public class Iznajmljivanje extends AbstractDomainObject {
             Grad g = new Grad(rs.getLong("GradID"), rs.getString("g.Naziv"));
             Klijent k = new Klijent(rs.getLong("KlijentID"), rs.getString("k.Ime"), rs.getString("k.Prezime"), rs.getString("Email"), rs.getString("Telefon"), g);
             Iznajmljivanje izn = new Iznajmljivanje(rs.getLong("IznajmljivanjeID"), rs.getDate("DatumVreme"), rs.getString("izn.Opis"),
-                    rs.getDouble("UkupanIznos"), k, r, null);
+                    rs.getDouble("UkupanIznos"), k, r, new ArrayList<>());
             lista.add(izn);
         }
         return lista;
